@@ -1,8 +1,10 @@
 const cityForm = document.querySelector('form');
 const card = document.querySelector('.card');
 const details = document.querySelector('.details');
-const time = document.querySelector('img.time')
-const icon = document.querySelector('.icon img')
+const time = document.querySelector('img.time');
+const icon = document.querySelector('.icon img');
+const forecast = new Forecast();
+
 
 const updateUI = (data) => {
 
@@ -31,27 +33,19 @@ const updateUI = (data) => {
     let timeSrc = weather.IsDayTime ? 'img/day.svg' : 'img/night.svg';
     time.setAttribute('src', timeSrc);
 
-    // let timeSrc = null;
+      // let timeSrc = null;
     // if(weather.IsDayTime){
     //     timeSrc = 'img/day.svg'
     // } else {
     //     timeSrc = 'img/night.svg'
     // }
-    // time.setAttribute('src', timeSrc);    
+    // time.setAttribute('src', timeSrc);  
 
     // Remove the d-none classs if present
     if(card.classList.contains('d-none')){
         card.classList.remove('d-none');
     }
 
-};
-
-const updateCity = async (city) => {
-
-    const cityInfo = await getCity(city);
-    const weather = await getWeather(cityInfo.Key); 
-
-    return { cityInfo, weather };
 };
 
 cityForm.addEventListener('submit', e => {
@@ -63,7 +57,7 @@ cityForm.addEventListener('submit', e => {
     cityForm.reset();
 
     // update the UI with the new city
-    updateCity(city)
+    forecast.updateCity(city)
     .then(data => updateUI(data))
     .catch(err => console.log(err));
 
@@ -73,7 +67,7 @@ cityForm.addEventListener('submit', e => {
 });
 
 if(localStorage.getItem('city')){
-    updateCity(localStorage.getItem('city'))
+    forecast.updateCity(localStorage.getItem('city'))
       .then(data => updateUI(data))
       .catch(err => console.log(err));
 }
